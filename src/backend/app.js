@@ -20,6 +20,42 @@ app.use(express.json());
 app.use(cors());
 
 router.use("/meals", mealsRouter);
+app.get("/future-meals", (req, res) => {
+  connection.query('SELECT * FROM meal WHERE `when` > CURDATE()', (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+app.get("/past-meals", (req, res) => {
+  connection.query('SELECT * FROM meal WHERE `when` < CURDATE()', (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+app.get("/all-meals", (req, res) => {
+  connection.query('SELECT * FROM meal', (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+app.get("/first-meal", (req, res) => {
+  connection.query('SELECT * FROM meal LIMIT 1', (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+app.get("/last-meal", (req, res) => {
+  connection.query('SELECT * FROM meal ORDER BY ID DESC LIMIT 1', (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
 
 if (process.env.API_PATH) {
   app.use(process.env.API_PATH, router);
