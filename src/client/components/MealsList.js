@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Meal from "./Meal";
+import axios from "axios";
 
-function MealsList() {
+const MealsList = () => {
   const [meals, setMeals] = useState([]);
 
   useEffect(() => {
@@ -9,7 +11,34 @@ function MealsList() {
 
   const fetchMeals = async () => {
     try {
-      const response = await fetch('/api/meals'); 
+      const response = await axios.get("/api/meals");
+      setMeals(response.data);
+    } catch (error) {
+      console.error("Error fetching meals:", error);
+    }
+  };
+
+  return (
+    <div className="meal-grid">
+      {meals.map((meal) => (
+        <Meal key={meal.id} meal={meal} />
+      ))}
+    </div>
+  );
+};
+
+export default MealsList;
+
+/* function MealsList() {
+  const [meals, setMeals] = useState([]);
+
+  useEffect(() => {
+    fetchMeals();
+  }, []);
+
+  const fetchMeals = async () => {
+    try {
+      const response = await fetch('/api/meals'); // Assuming the API endpoint is '/api/meals'
       const data = await response.json();
       setMeals(data);
     } catch (error) {
@@ -31,4 +60,4 @@ function MealsList() {
   );
 }
 
-export default MealsList;
+export default MealsList; */

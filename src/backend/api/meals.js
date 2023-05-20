@@ -72,7 +72,7 @@ mealsRouter.delete("/:id", async (req, res) => {
 
 //search queries 
 
-router.get("/", async (req, res) => {
+mealsRouter.get("/", async (req, res) => {
   try {
     const param = req.query;
     for (const [key, value] of Object.entries(param)) {
@@ -135,7 +135,7 @@ router.get("/", async (req, res) => {
 });
 
 
-router.get("/:id/reviews", async (req, res) => {
+mealsRouter.get("/:id/reviews", async (req, res) => {
   try {
     const requestedId = parseInt(req.params.id);
     const reviews = await knex("Review")
