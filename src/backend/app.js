@@ -6,6 +6,7 @@ const path = require("path");
 
 const mealsRouter = require("./api/meals");
 const reservationsRouter = require("./api/reservations");
+const reviewsRouter = require("./api/reviews");
 const buildPath = path.join(__dirname, "../../dist");
 const port = process.env.PORT || 3000;
 const cors = require("cors");
@@ -24,6 +25,7 @@ app.use(cors());
 
 router.use("/meals", mealsRouter);
 router.use("/reservations", reservationsRouter);
+router.use("/reviews", reviewsRouter);
 //Future meals route 
 app.get("/future-meals", (req, res) => {
   knex
@@ -53,7 +55,7 @@ app.get("/past-meals", (req, res) => {
 //All meals route 
 app.get("/all-meals", (req, res) => {
   knex
-  .raw("SELECT * FROM meal ORDER BY id"")
+  .raw("SELECT * FROM meal ORDER BY id")
   .then((rows) => {
     res.end(JSON.stringify(rows[0]));
   })

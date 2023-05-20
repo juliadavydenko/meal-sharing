@@ -72,5 +72,86 @@ mealsRouter.delete("/:id", async (req, res) => {
   }
 });
 
+//search queries 
+
+router.get("/", async (req, res) => {
+  try {
+    const param = req.query;
+    for (const [key, value] of Object.entries(param)) {
+      
+      if (key === "maxPrice") {
+        const price = parseInt(value);
+        const selectedMeals = await knex
+          .select()
+          .from("Meal")
+          .where("price", "<=", price);
+        res.json(selectedMeals);
+           } else if (key === "title") {
+        const meals = await knex
+          .select()
+          .from("Meal")
+          .where("title", "like", `%${value}%`);
+        res.status(200).json(meals);
+      
+      } else if (key === "dateAfter") {
+        const meals = await knex
+          .select()
+          .from("Meal")
+          .where("when", ">", `${value}`);
+        res.status(200).json(meals);
+        
+      } else if (key === "dateBefore") {
+        const meals = await knex
+          .select()
+          .from("Meal")
+          .where("when", "<", `${value}`);
+        res.status(200).json(meals);
+        
+      } else if (key === "limit") {
+        const meals = await knex.select().from("Meal").limit(`${value}`);
+        res.status(200).json(meals);
+
+      } else if (
+        req.query.sortKey === "when" ||
+        req.query.sortKey === "max_reservations" ||
+        req.query.sortKey === "price"
+      ) {
+        
+        if (req.query.sortDir) {
+          const meals = await knex
+            .select()
+            .from("meal")
+            .orderBy(`${req.query.sortKey}`, `${req.query.sortDir}`);
+          return res.status(200).json(meals);
+        } else {
+          const meals = await knex.select().from("meal").orderBy(`${value}`);
+          res.status(200).json(meals);
+        }
+      } else {
+        res.status(404).json({ message: "No data" });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.get("/:id/reviews", async (req, res) => {
+  try {
+    const requestedId = parseInt(req.params.id);
+    const reviews = await knex("Review")
+      .select()
+      .where("meal_id", `${requestedId}`);
+    if (reviews.length === 0) {
+      res.status(404).json({ error: "No data" });
+    } else {
+      res.status(200).json(reviews);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 module.exports = mealsRouter;
