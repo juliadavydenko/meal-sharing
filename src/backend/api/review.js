@@ -5,8 +5,8 @@ const knex = require("../database");
 //all reviews
 router.get("/", async (req, res) => {
   try {
-    const data = await knex("Review").select();
-    res.status(200).json(await data);
+    const data = await knex("review").select();
+    res.status(200).json(data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occured" });
@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
     if (review.length === 0) {
       res.status(404).json({ error: "No data found" });
     } else {
-      res.status(200).json(await review);
+      res.status(200).json(review);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

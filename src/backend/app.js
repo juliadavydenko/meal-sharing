@@ -6,7 +6,7 @@ const path = require("path");
 
 const mealsRouter = require("./api/meals");
 const reservationsRouter = require("./api/reservations");
-const reviewsRouter = require("./api/reviews");
+const reviewsRouter = require("./api/review");
 const buildPath = path.join(__dirname, "../../dist");
 const port = process.env.PORT || 3000;
 const cors = require("cors");
